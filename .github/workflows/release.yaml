@@ -20,6 +20,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            *bundle-${{ github.ref_name }}.yaml
-            LICENSE
-            CHECKSUMS.sha256
+            _build/common-*-bundle-${{ github.ref_name }}.yaml
+            _build/LICENSE
+            _build/CHECKSUMS.sha256

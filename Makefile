@@ -8,29 +8,38 @@ export KUBEVIRT_VERSION = main
 # Supported runtimes are docker and podman. By default targets run directly on the host.
 export COMMON_INSTANCETYPES_IMAGE = quay.io/kubevirtci/common-instancetypes-builder
 
-all: lint schema validate readme check
+.PHONY: all
+all: lint validate readme check
 
+.PHONY: build_image
 build_image:
 	./scripts/build_image.sh
 
+.PHONY: push_image
 push_image:
 	./scripts/push_image.sh
 
+.PHONY: lint
 lint: generate
 	./scripts/cri.sh  "./scripts/lint.sh"
 
+.PHONY: generate
 generate:
 	./scripts/cri.sh  "./scripts/generate.sh"
 
-validate: generate
+.PHONY: validate
+validate: generate schema
 	./scripts/cri.sh  "./scripts/validate.sh"
 
+.PHONY: schema
 schema:
 	./scripts/cri.sh  "./scripts/schema.sh"
 
+.PHONY: readme
 readme: generate
 	./scripts/cri.sh  "./scripts/readme.sh"
 
+.PHONY: check
 check:
 	./scripts/cri.sh  "./scripts/check.sh"
 
@@ -66,7 +75,6 @@ kubevirt-sync:
 kubevirt-functest:
 	./scripts/kubevirt.sh functest
 
+.PHONY: clean
 clean:
-	rm -f common-*-bundle.yaml
-
-.PHONY: all build_image lint generate schema validate readme
+	rm -f common-*-bundle.yaml CHECKSUMS.sha256
